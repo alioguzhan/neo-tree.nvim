@@ -906,14 +906,17 @@ end
 
 local get_buffer = function(bufname, state)
   local bufnr = vim.fn.bufnr(bufname)
-  if bufnr > 0 then
-    if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
-      return bufnr
-    else
-      pcall(vim.api.nvim_buf_delete, bufnr, { force = true })
-      bufnr = 0
-    end
-  end
+  -- WORKAROUND:
+  -- https://github.com/romgrk/barbar.nvim/issues/277
+  -- https://github.com/nvim-neo-tree/neo-tree.nvim/issues/551
+  -- if bufnr > 0 then
+  --   if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
+  --     return bufnr
+  --   else
+  --     pcall(vim.api.nvim_buf_delete, bufnr, { force = true })
+  --     bufnr = 0
+  --   end
+  -- end
   if bufnr < 1 then
     bufnr = vim.api.nvim_create_buf(false, false)
     vim.api.nvim_buf_set_name(bufnr, bufname)
